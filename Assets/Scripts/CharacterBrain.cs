@@ -29,7 +29,7 @@ namespace SpaceBum
 
         AerialMovementState aerialState = AerialMovementState.Grounded;
         AnimatorState animatorState = AnimatorState.Locomotion;
-        MotorMovementMode movementMode = MotorMovementMode.Strafe;
+        MotorMovementMode movementMode = MotorMovementMode.Exploration;
         GroundMovementState groundMovementState = GroundMovementState.Walking;
 
         public bool IsGroundedState => animatorState == AnimatorState.Locomotion;
@@ -79,7 +79,7 @@ namespace SpaceBum
         void Update()
         {
             UpdateAnimator();
-
+            
             switch (movementMode)
             {
                 case MotorMovementMode.Exploration:
@@ -103,7 +103,7 @@ namespace SpaceBum
                 // Ground --------
                 Vector3 groundMovementVector = animator.deltaPosition;
                 groundMovementVector.y = 0.0f;
-
+                
                 character.Move(groundMovementVector * maxSpeed);
             }
             else
@@ -273,10 +273,11 @@ namespace SpaceBum
         {
             Vector2 axis = input.Axis;
             float magnitude = axis.magnitude;
-
+            
             if (magnitude > 1)
             {
                 axis.Normalize();
+                magnitude = axis.magnitude;
             }
 
             NLateralSpeed = 0f;
@@ -316,13 +317,13 @@ namespace SpaceBum
             animator.SetFloat(hashTurningSpeed, NTurningSpeed);
             animator.SetBool(hashIsStrafing, input.IsStrafing);
 
-            bool fullyGrounded = character.isGrounded && animatorState != AnimatorState.Landing;
+            //bool fullyGrounded = character.isGrounded && animatorState != AnimatorState.Landing;
 
-            if (fullyGrounded || animatorState == AnimatorState.Falling)
-            {
+            //if (fullyGrounded || animatorState == AnimatorState.Falling)
+            //{
                 animator.SetFloat(hashLateralSpeed, NLateralSpeed, 1f, Time.deltaTime);
                 animator.SetFloat(hashForwardSpeed, NForwardSpeed, 1f, Time.deltaTime);
-            }
+            //}
         }
 
         #endregion
